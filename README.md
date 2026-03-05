@@ -144,12 +144,32 @@ The proposal was drafted by [name=Bob].
 
 ### Format-Specific Requirements
 
-**For HTML output (default):**
-- Include Font Awesome in your document head:
-  ```html
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  ```
+**For HTML output (default with Font Awesome):**
+
+You need to include Font Awesome CSS. There are several ways to do this:
+
+1. **Using pandoc's `-H` option (command line):**
+   ```bash
+   pandoc --lua-filter custom-highlight.lua \
+     --standalone \
+     -H <(echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">') \
+     input.md -o output.html
+   ```
+
+2. **Using metadata in your markdown file:**
+   ```yaml
+   ---
+   header-includes: |
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   ---
+   ```
+   Then generate with `--standalone`:
+   ```bash
+   pandoc --lua-filter custom-highlight.lua --standalone input.md -o output.html
+   ```
+
+3. **Using a custom pandoc template:**
+   Create a template file with Font Awesome included in the `<head>` section.
 
 **For HTML output (email-friendly):**
 - Set `name-label-emoji: true` in metadata to use emoji instead of Font Awesome
@@ -192,8 +212,78 @@ The proposal was drafted by [name=Bob].
 
 ### For Name Labels
 
-- For HTML output: Font Awesome CSS (for user icons)
+- For HTML output: Font Awesome CSS (for user icons) or set `name-label-emoji: true` for emoji mode
 - For LaTeX output: `fontawesome5` package (for `\faUser` icon)
+
+## Complete Usage Examples
+
+### Example 1: Basic document with highlights and names
+
+**Input (document.md):**
+```markdown
+---
+highlight-color: 'orange'
+header-includes: |
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+---
+
+# Project Notes
+
+[name=Alice] suggested we ==highlight important sections== in orange.
+
+Key points from [name=Bob]:
+- Use the new ==API endpoints==
+- Test ==edge cases== thoroughly
+```
+
+**Generate HTML:**
+```bash
+pandoc --from markdown+mark \
+  --lua-filter custom-highlight.lua \
+  --standalone \
+  document.md -o output.html
+```
+
+### Example 2: Email-friendly HTML
+
+**Input (email.md):**
+```markdown
+---
+highlight-color: 'lightyellow'
+highlight-text-color: 'darkblue'
+name-label-emoji: true
+---
+
+# Status Update
+
+[name=Team Lead] The ==milestone was completed== on time!
+
+Next steps by [name=Developer]:
+- Deploy to staging
+- Run integration tests
+```
+
+**Generate email-compatible HTML:**
+```bash
+pandoc --from markdown+mark \
+  --lua-filter custom-highlight.lua \
+  --standalone \
+  email.md -o email.html
+```
+
+### Example 3: Using pandoc command-line options
+
+**No metadata needed - pure command line:**
+```bash
+pandoc input.md \
+  --from markdown+mark \
+  --lua-filter custom-highlight.lua \
+  --standalone \
+  --metadata highlight-color='lightgreen' \
+  --metadata highlight-text-color='darkgreen' \
+  -H <(echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">') \
+  -o output.html
+```
 
 ## License
 

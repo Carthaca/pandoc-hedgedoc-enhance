@@ -5,7 +5,7 @@
 
 set -e
 
-FILTER="custom-highlight.lua"
+FILTER="../custom-highlight.lua"
 INPUT="test-name-labels.md"
 EXPECTED_HTML="expected-name-html.html"
 EXPECTED_LATEX="expected-name-latex.tex"

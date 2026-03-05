@@ -1,18 +1,10 @@
 .PHONY: test clean
 
-test: expected.html
-	@pandoc --from markdown+mark \
-		--lua-filter custom-highlight.lua \
-		--output actual.html \
-		sample.md
-	@diff -u expected.html actual.html && echo "Test passed!" || \
-		(echo "Test failed: output differs from expected.html"; exit 1)
-
-expected.html:
-	@pandoc --from markdown+mark \
-		--lua-filter custom-highlight.lua \
-		--output expected.html \
-		sample.md
+test:
+	@echo "Running test suite..."
+	@cd tests && ./test-name-labels.sh
+	@cd tests && ./test-integration.sh
+	@echo "All tests passed!"
 
 clean:
-	rm -f actual.html
+	@rm -f tests/actual-*.html tests/actual-*.tex tests/actual-*.txt

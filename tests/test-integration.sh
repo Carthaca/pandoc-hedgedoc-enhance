@@ -5,7 +5,7 @@
 
 set -e
 
-FILTER="custom-highlight.lua"
+FILTER="../custom-highlight.lua"
 INPUT="test-integration.md"
 ACTUAL_HTML="actual-integration-html.html"
 ACTUAL_LATEX="actual-integration-latex.tex"

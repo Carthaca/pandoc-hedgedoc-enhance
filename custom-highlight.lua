@@ -365,9 +365,9 @@ local function process_name_labels(inlines)
   return result
 end
 
--- Add required LaTeX packages to the document header
-local function add_latex_packages(meta)
-  -- Only add packages if outputting to LaTeX
+-- Add required packages to the document header
+local function add_required_packages(meta)
+  -- Add LaTeX packages
   if FORMAT:match 'latex' then
     local header_includes = meta['header-includes']
     local latex_packages = '\\usepackage{fontawesome5}'
@@ -387,12 +387,42 @@ local function add_latex_packages(meta)
     meta['header-includes'] = header_includes
   end
 
+  -- Add Font Awesome CSS for HTML (unless emoji mode is enabled)
+  if FORMAT:match 'html' then
+    -- Check if emoji mode will be enabled
+    local use_emoji = false
+    if meta['name-label-emoji'] then
+      local value = stringify(meta['name-label-emoji']):lower()
+      use_emoji = (value == 'true' or value == 'yes' or value == '1')
+    end
+
+    -- Only add Font Awesome if not using emoji mode
+    if not use_emoji then
+      local header_includes = meta['header-includes']
+      local fontawesome_css = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">'
+
+      if header_includes then
+        -- Append to existing header-includes
+        if type(header_includes) == 'table' then
+          table.insert(header_includes, pandoc.RawBlock('html', fontawesome_css))
+        else
+          header_includes = pandoc.MetaList({header_includes, pandoc.RawBlock('html', fontawesome_css)})
+        end
+      else
+        -- Create new header-includes
+        header_includes = pandoc.MetaList({pandoc.RawBlock('html', fontawesome_css)})
+      end
+
+      meta['header-includes'] = header_includes
+    end
+  end
+
   return meta
 end
 
 -- Return the filter
 return {
-  { Meta = add_latex_packages },
+  { Meta = add_required_packages },
   { Meta = read_config },
   { Span = process_mark },
   { Inlines = process_name_labels }

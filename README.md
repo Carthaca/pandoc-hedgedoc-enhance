@@ -33,9 +33,7 @@ highlight-text-color: 'darkblue'             # Optional: text color inside highl
 # Name label configuration
 name-label-emoji: false                      # Set to 'true' for email-friendly mode
 
-# Font Awesome CSS (required if name-label-emoji is false)
-header-includes: |
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+# Note: Font Awesome CSS is automatically included unless emoji mode is enabled
 ---
 ```
 
@@ -155,35 +153,15 @@ The proposal was drafted by [name=Bob].
 
 ### Format-Specific Requirements
 
-**For HTML output (default with Font Awesome):**
+**For HTML output (default):**
 
-You need to include Font Awesome CSS. There are several ways to do this:
+The filter automatically includes Font Awesome CSS from CDN. No manual setup required!
 
-1. **Using pandoc's `-H` option (command line):**
-   ```bash
-   pandoc --lua-filter custom-highlight.lua \
-     --standalone \
-     -H <(echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">') \
-     input.md -o output.html
-   ```
-
-2. **Using metadata in your markdown file:**
-   ```yaml
-   ---
-   header-includes: |
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   ---
-   ```
-   Then generate with `--standalone`:
-   ```bash
-   pandoc --lua-filter custom-highlight.lua --standalone input.md -o output.html
-   ```
-
-3. **Using a custom pandoc template:**
-   Create a template file with Font Awesome included in the `<head>` section.
+If you prefer to provide your own Font Awesome CSS or use a different CDN, you can add it to your document's `header-includes` and the filter will respect it.
 
 **For HTML output (email-friendly):**
 - Set `name-label-emoji: true` in metadata to use emoji instead of Font Awesome
+- Font Awesome CSS is automatically disabled in emoji mode
 - No external dependencies required
 - Recommended for HTML emails where external CSS won't work
   ```yaml
@@ -222,7 +200,7 @@ You need to include Font Awesome CSS. There are several ways to do this:
 
 ### For Name Labels
 
-- For HTML output: Font Awesome CSS (for user icons) or set `name-label-emoji: true` for emoji mode
+- For HTML output: Font Awesome CSS (automatically included) or set `name-label-emoji: true` for emoji mode
 - For LaTeX output: fontawesome5 package (automatically included by the filter)
 
 ## Complete Usage Examples

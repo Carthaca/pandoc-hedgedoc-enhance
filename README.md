@@ -1,5 +1,9 @@
 # custom-highlight
 
+[![GitHub release](https://img.shields.io/github/v/release/Carthaca/pandoc-hedgedoc-enhance)](https://github.com/Carthaca/pandoc-hedgedoc-enhance/releases)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Carthaca/pandoc-hedgedoc-enhance)](https://github.com/Carthaca/pandoc-hedgedoc-enhance/stargazers)
+
 Customize the color of highlighted text (`==text==` syntax) and add
 user attribution labels (`[name=Someone]` syntax) in pandoc documents.
 

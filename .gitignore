@@ -1,0 +1,6 @@
+# Test artifacts
+actual-*.html
+actual-*.tex
+actual-*.txt
+test-integration.html
+test-integration.tex

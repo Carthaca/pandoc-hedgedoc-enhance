@@ -1,0 +1,40 @@
+<h1 id="name-label-test-cases">Name Label Test Cases</h1>
+<p>This document tests the [name=] feature for user attribution
+labels.</p>
+<h2 id="basic-name">Basic Name</h2>
+<p>A simple name label:
+<small><i class="fa fa-user"></i> Maurice</small></p>
+<h2 id="multiple-names">Multiple Names</h2>
+<p>Collaboration between <small><i class="fa fa-user"></i> Alice</small>
+and <small><i class="fa fa-user"></i> Bob</small> on this section.</p>
+<h2 id="name-with-spaces">Name with Spaces</h2>
+<p>Full names work too:
+<small><i class="fa fa-user"></i> Jean-Paul Sartre</small></p>
+<h2 id="unicode-names">Unicode Names</h2>
+<p>International support: <small><i class="fa fa-user"></i> José</small>
+and <small><i class="fa fa-user"></i> 李明</small></p>
+<h2 id="names-in-different-contexts">Names in Different Contexts</h2>
+<ul>
+<li>List item by <small><i class="fa fa-user"></i> Charlie</small></li>
+<li>Another item by <small><i class="fa fa-user"></i> Diana</small></li>
+</ul>
+<ol type="1">
+<li>First point by <small><i class="fa fa-user"></i> Eve</small></li>
+<li>Second point by <small><i class="fa fa-user"></i> Frank</small></li>
+</ol>
+<blockquote>
+<p>Quote attributed to
+<small><i class="fa fa-user"></i> Grace</small></p>
+</blockquote>
+<p>This paragraph has contributions from
+<small><i class="fa fa-user"></i> Helen</small> and
+<small><i class="fa fa-user"></i> Ivan</small> in the same line.</p>
+<h2 id="malformed-patterns">Malformed Patterns</h2>
+<p>These should remain unchanged:</p>
+<ul>
+<li>Empty name: [name=]</li>
+<li>Unclosed bracket: [name=Someone</li>
+<li>No opening bracket: name=Something]</li>
+<li>Just brackets: [name]</li>
+<li>Wrong format: [username=Bob]</li>
+</ul>

@@ -1,0 +1,65 @@
+\section{Name Label Test Cases}\label{name-label-test-cases}
+
+This document tests the {[}name={]} feature for user attribution labels.
+
+\subsection{Basic Name}\label{basic-name}
+
+A simple name label: {\small \faUser\ Maurice}
+
+\subsection{Multiple Names}\label{multiple-names}
+
+Collaboration between {\small \faUser\ Alice} and {\small \faUser\ Bob}
+on this section.
+
+\subsection{Name with Spaces}\label{name-with-spaces}
+
+Full names work too: {\small \faUser\ Jean-Paul Sartre}
+
+\subsection{Unicode Names}\label{unicode-names}
+
+International support: {\small \faUser\ José} and {\small \faUser\ 李明}
+
+\subsection{Names in Different
+Contexts}\label{names-in-different-contexts}
+
+\begin{itemize}
+\tightlist
+\item
+  List item by {\small \faUser\ Charlie}
+\item
+  Another item by {\small \faUser\ Diana}
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  First point by {\small \faUser\ Eve}
+\item
+  Second point by {\small \faUser\ Frank}
+\end{enumerate}
+
+\begin{quote}
+Quote attributed to {\small \faUser\ Grace}
+\end{quote}
+
+This paragraph has contributions from {\small \faUser\ Helen} and
+{\small \faUser\ Ivan} in the same line.
+
+\subsection{Malformed Patterns}\label{malformed-patterns}
+
+These should remain unchanged:
+
+\begin{itemize}
+\tightlist
+\item
+  Empty name: {[}name={]}
+\item
+  Unclosed bracket: {[}name=Someone
+\item
+  No opening bracket: name=Something{]}
+\item
+  Just brackets: {[}name{]}
+\item
+  Wrong format: {[}username=Bob{]}
+\end{itemize}

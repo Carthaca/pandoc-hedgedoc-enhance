@@ -193,10 +193,9 @@ You need to include Font Awesome CSS. There are several ways to do this:
   ```
 
 **For LaTeX output:**
-- Include the fontawesome5 package in your preamble:
-  ```latex
-  \usepackage{fontawesome5}
-  ```
+- The filter automatically includes `\usepackage{fontawesome5}` in the preamble
+- No manual setup required!
+- The fontawesome5 package must be installed in your LaTeX distribution (included in most modern distributions)
 
 ## Supported Formats
 
@@ -224,7 +223,7 @@ You need to include Font Awesome CSS. There are several ways to do this:
 ### For Name Labels
 
 - For HTML output: Font Awesome CSS (for user icons) or set `name-label-emoji: true` for emoji mode
-- For LaTeX output: `fontawesome5` package (for `\faUser` icon)
+- For LaTeX output: fontawesome5 package (automatically included by the filter)
 
 ## Complete Usage Examples
 

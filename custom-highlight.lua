@@ -365,8 +365,34 @@ local function process_name_labels(inlines)
   return result
 end
 
+-- Add required LaTeX packages to the document header
+local function add_latex_packages(meta)
+  -- Only add packages if outputting to LaTeX
+  if FORMAT:match 'latex' then
+    local header_includes = meta['header-includes']
+    local latex_packages = '\\usepackage{fontawesome5}'
+
+    if header_includes then
+      -- Append to existing header-includes
+      if type(header_includes) == 'table' then
+        table.insert(header_includes, pandoc.RawBlock('latex', latex_packages))
+      else
+        header_includes = pandoc.MetaList({header_includes, pandoc.RawBlock('latex', latex_packages)})
+      end
+    else
+      -- Create new header-includes
+      header_includes = pandoc.MetaList({pandoc.RawBlock('latex', latex_packages)})
+    end
+
+    meta['header-includes'] = header_includes
+  end
+
+  return meta
+end
+
 -- Return the filter
 return {
+  { Meta = add_latex_packages },
   { Meta = read_config },
   { Span = process_mark },
   { Inlines = process_name_labels }

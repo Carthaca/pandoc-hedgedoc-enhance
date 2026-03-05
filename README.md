@@ -22,9 +22,20 @@ Configure colors through metadata in your markdown document:
 
 ```yaml
 ---
-highlight-color: '#ffcc00'
-highlight-background-color: '#ffcc00'
-highlight-text-color: '#000000'
+# Custom Highlight Filter Configuration
+# Use with: pandoc --from markdown+mark --lua-filter custom-highlight.lua
+
+# Highlight colors (use color names or hex values)
+highlight-color: 'orange'                    # Background color for ==text==
+highlight-background-color: 'lightyellow'    # Optional: override background
+highlight-text-color: 'darkblue'             # Optional: text color inside highlights
+
+# Name label configuration
+name-label-emoji: false                      # Set to 'true' for email-friendly mode
+
+# Font Awesome CSS (required if name-label-emoji is false)
+header-includes: |
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 ---
 ```
 

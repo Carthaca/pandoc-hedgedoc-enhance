@@ -30,7 +30,7 @@ highlight-text-color: '#000000'
 
 #### Options
 
-- `highlight-color`: The highlight color (hex format).
+- `highlight-color`: The highlight color (hex format or color name).
   Default: `#ffff00` (yellow)
 
 - `highlight-background-color`: Background color for the highlight.
@@ -39,6 +39,13 @@ highlight-text-color: '#000000'
 
 - `highlight-text-color`: Text color inside the highlight
   (optional). Useful for dark highlights where you need light text.
+
+**Supported color names:**
+- Basic: `black`, `white`, `red`, `green`, `blue`, `yellow`, `cyan`, `magenta`, `orange`, `purple`, `pink`, `brown`, `gray`/`grey`
+- Light variants: `lightred`, `lightgreen`, `lightblue`, `lightyellow`, `lightcyan`, `lightmagenta`, `lightorange`, `lightpurple`, `lightpink`, `lightgray`/`lightgrey`
+- Dark variants: `darkred`, `darkgreen`, `darkblue`, `darkyellow`, `darkcyan`, `darkmagenta`, `darkorange`, `darkpurple`, `darkpink`, `darkgray`/`darkgrey`
+
+You can also use hex colors (e.g., `#ff9900`) or any CSS color value.
 
 ### Examples
 
@@ -52,10 +59,18 @@ This is ==highlighted text== in the document.
 
 ```yaml
 ---
-highlight-color: '#ff9900'
+highlight-color: 'orange'
 ---
 
 This is ==highlighted in orange== now.
+```
+
+Or using hex:
+
+```yaml
+---
+highlight-color: '#ff9900'
+---
 ```
 
 #### Dark highlight with light text:

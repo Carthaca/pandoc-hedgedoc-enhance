@@ -19,6 +19,69 @@ limitations under the License.
 
 local stringify = pandoc.utils.stringify
 
+-- Color name to hex mapping
+local color_names = {
+  -- Basic colors
+  black = '#000000',
+  white = '#ffffff',
+  red = '#ff0000',
+  green = '#00ff00',
+  blue = '#0000ff',
+  yellow = '#ffff00',
+  cyan = '#00ffff',
+  magenta = '#ff00ff',
+
+  -- Extended colors
+  orange = '#ffa500',
+  purple = '#800080',
+  pink = '#ffc0cb',
+  brown = '#a52a2a',
+  gray = '#808080',
+  grey = '#808080',
+
+  -- Light variants
+  lightred = '#ffcccc',
+  lightgreen = '#ccffcc',
+  lightblue = '#ccccff',
+  lightyellow = '#ffffcc',
+  lightcyan = '#ccffff',
+  lightmagenta = '#ffccff',
+  lightorange = '#ffe4cc',
+  lightpurple = '#e6ccff',
+  lightpink = '#ffe6f0',
+  lightgray = '#d3d3d3',
+  lightgrey = '#d3d3d3',
+
+  -- Dark variants
+  darkred = '#8b0000',
+  darkgreen = '#006400',
+  darkblue = '#00008b',
+  darkyellow = '#cccc00',
+  darkcyan = '#008b8b',
+  darkmagenta = '#8b008b',
+  darkorange = '#ff8c00',
+  darkpurple = '#4b0082',
+  darkpink = '#c71585',
+  darkgray = '#a9a9a9',
+  darkgrey = '#a9a9a9',
+}
+
+-- Convert color name to hex, or return original if already hex
+local function resolve_color(color)
+  if not color then return nil end
+
+  -- Remove whitespace and convert to lowercase
+  local normalized = color:lower():gsub('%s+', '')
+
+  -- Check if it's a color name
+  if color_names[normalized] then
+    return color_names[normalized]
+  end
+
+  -- Return as-is (assume it's hex or CSS color)
+  return color
+end
+
 -- Default configuration
 local config = {
   color = '#ffff00',           -- Default yellow
@@ -29,13 +92,13 @@ local config = {
 -- Read configuration from metadata
 local function read_config(meta)
   if meta['highlight-color'] then
-    config.color = stringify(meta['highlight-color'])
+    config.color = resolve_color(stringify(meta['highlight-color']))
   end
   if meta['highlight-background-color'] then
-    config.background_color = stringify(meta['highlight-background-color'])
+    config.background_color = resolve_color(stringify(meta['highlight-background-color']))
   end
   if meta['highlight-text-color'] then
-    config.text_color = stringify(meta['highlight-text-color'])
+    config.text_color = resolve_color(stringify(meta['highlight-text-color']))
   end
 end
 

@@ -11,6 +11,64 @@ By default, pandoc converts `==highlighted text==` to HTML's
 `<mark>` element or LaTeX's `\hl` command. This filter allows you
 to customize the highlight color through metadata.
 
+## Installation
+
+### Quick Install (Global)
+
+Install the filter globally so you can use it from any directory:
+
+**macOS and Linux:**
+```bash
+# Find your pandoc data directory
+pandoc --version | grep "User data directory"
+
+# Create filters directory if it doesn't exist
+mkdir -p ~/.local/share/pandoc/filters
+
+# Download the filter
+curl -o ~/.local/share/pandoc/filters/custom-highlight.lua \
+  https://raw.githubusercontent.com/Carthaca/pandoc-hedgedoc-enhance/main/custom-highlight.lua
+
+# Now you can use it without specifying the path
+pandoc --lua-filter custom-highlight.lua input.md -o output.html
+```
+
+**Windows (PowerShell):**
+```powershell
+# Create filters directory
+New-Item -ItemType Directory -Force -Path "$env:APPDATA\pandoc\filters"
+
+# Download the filter
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Carthaca/pandoc-hedgedoc-enhance/main/custom-highlight.lua" `
+  -OutFile "$env:APPDATA\pandoc\filters\custom-highlight.lua"
+
+# Now you can use it without specifying the path
+pandoc --lua-filter custom-highlight.lua input.md -o output.html
+```
+
+### Local Install (Per Project)
+
+For project-specific usage:
+
+```bash
+# Download to your project directory
+curl -O https://raw.githubusercontent.com/Carthaca/pandoc-hedgedoc-enhance/main/custom-highlight.lua
+
+# Use with full or relative path
+pandoc --lua-filter ./custom-highlight.lua input.md -o output.html
+```
+
+### Clone from GitHub
+
+```bash
+# Clone the entire repository (includes tests and examples)
+git clone https://github.com/Carthaca/pandoc-hedgedoc-enhance.git
+cd pandoc-hedgedoc-enhance
+
+# Use the filter
+pandoc --lua-filter custom-highlight.lua examples/example-names.md -o output.html
+```
+
 ## Usage
 
 Enable the `mark` extension and apply the filter:
@@ -18,6 +76,23 @@ Enable the `mark` extension and apply the filter:
 ```bash
 pandoc --from markdown+mark --lua-filter custom-highlight.lua \
   input.md -o output.html
+```
+
+**Verify Installation:**
+
+Test that the filter is working:
+
+```bash
+# Create a test file
+echo -e "---\nhighlight-color: 'orange'\n---\n\nTest ==highlight== and [name=Alice]" > test.md
+
+# Generate HTML
+pandoc --from markdown+mark --lua-filter custom-highlight.lua --standalone test.md -o test.html
+
+# Check output (should show orange background and name label)
+open test.html  # macOS
+# or: xdg-open test.html  # Linux
+# or: start test.html  # Windows
 ```
 
 ### Configuration
@@ -276,6 +351,90 @@ pandoc input.md \
   -H <(echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">') \
   -o output.html
 ```
+
+## Troubleshooting
+
+### Filter not found
+
+**Error:** `Filter custom-highlight.lua not found`
+
+**Solutions:**
+1. **Check the file path:** Make sure the filter file exists
+   ```bash
+   ls -l custom-highlight.lua
+   # or if installed globally:
+   ls -l ~/.local/share/pandoc/filters/custom-highlight.lua  # Linux/macOS
+   ls "$env:APPDATA\pandoc\filters\custom-highlight.lua"  # Windows
+   ```
+
+2. **Use absolute path:**
+   ```bash
+   pandoc --lua-filter /full/path/to/custom-highlight.lua input.md -o output.html
+   ```
+
+3. **Verify pandoc data directory:**
+   ```bash
+   pandoc --version | grep "User data"
+   ```
+
+### Highlights not working
+
+**Problem:** `==text==` appears as literal text, not highlighted
+
+**Solution:** Enable the `mark` extension:
+```bash
+pandoc --from markdown+mark --lua-filter custom-highlight.lua input.md -o output.html
+#                    ^^^^^ Don't forget this!
+```
+
+### Font Awesome icons not showing
+
+**Problem:** Name labels show `[i class="fa fa-user"]` instead of icons
+
+**Solutions:**
+1. **Use standalone mode:**
+   ```bash
+   pandoc --lua-filter custom-highlight.lua --standalone input.md -o output.html
+   #                                        ^^^^^^^^^^^
+   ```
+
+2. **Or use emoji mode:**
+   ```yaml
+   ---
+   name-label-emoji: true
+   ---
+   ```
+
+### LaTeX compilation errors
+
+**Error:** `Undefined control sequence \faUser`
+
+**Solution:** Make sure fontawesome5 package is installed:
+```bash
+# Check if installed
+tlmgr info fontawesome5
+
+# Install if missing (TeX Live)
+tlmgr install fontawesome5
+
+# Or (MiKTeX)
+mpm --install fontawesome5
+```
+
+### Colors not appearing in PDF
+
+**Problem:** Highlights work in HTML but not in PDF
+
+**Solution:** Make sure to use `markdown+mark` when generating PDF:
+```bash
+pandoc --from markdown+mark --lua-filter custom-highlight.lua input.md -o output.pdf
+```
+
+### Getting Help
+
+- **Check examples:** See the `examples/` directory
+- **Run tests:** `cd tests && ./test-name-labels.sh`
+- **Open an issue:** https://github.com/Carthaca/pandoc-hedgedoc-enhance/issues
 
 ## License
 

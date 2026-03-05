@@ -84,6 +84,19 @@ highlight-text-color: '#ffffff'
 This is ==dark highlighted text== with white text.
 ```
 
+#### Text color only (no background):
+
+```yaml
+---
+highlight-color: 'none'
+highlight-text-color: 'red'
+---
+
+This ==red text== has no background highlighting.
+```
+
+You can use `none` or `transparent` for `highlight-color` or `highlight-background-color` to disable the background and only apply text color.
+
 ## User Attribution Labels
 
 The filter also supports HedgeDoc-style user attribution labels using the

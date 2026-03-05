@@ -66,6 +66,10 @@ local color_names = {
   darkgrey = '#a9a9a9',
 }
 
+-- Add special value to disable background
+color_names['none'] = 'none'
+color_names['transparent'] = 'transparent'
+
 -- Convert color name to hex, or return original if already hex
 local function resolve_color(color)
   if not color then return nil end
@@ -105,18 +109,34 @@ end
 -- Generate HTML for highlighted text
 local function html_highlight(content)
   local bg_color = config.background_color or config.color
-  local style = string.format('background-color: %s;', bg_color)
+  local style = ''
 
-  if config.text_color then
-    style = style .. string.format(' color: %s;', config.text_color)
+  -- Only add background if not 'none' or 'transparent'
+  if bg_color ~= 'none' and bg_color ~= 'transparent' then
+    style = string.format('background-color: %s;', bg_color)
   end
 
-  local html = string.format('<mark style="%s">', style)
-  return {
-    pandoc.RawInline('html', html)
-  }, content, {
-    pandoc.RawInline('html', '</mark>')
-  }
+  if config.text_color then
+    if #style > 0 then
+      style = style .. ' '
+    end
+    style = style .. string.format('color: %s;', config.text_color)
+  end
+
+  -- Use span if no background, mark if there's background
+  local tag = (bg_color == 'none' or bg_color == 'transparent') and 'span' or 'mark'
+
+  if #style > 0 then
+    local html = string.format('<%s style="%s">', tag, style)
+    return {
+      pandoc.RawInline('html', html)
+    }, content, {
+      pandoc.RawInline('html', string.format('</%s>', tag))
+    }
+  else
+    -- No styling needed, return content as-is
+    return {}, content, {}
+  end
 end
 
 -- Generate LaTeX for highlighted text
@@ -125,6 +145,9 @@ local function latex_highlight(content)
 
   -- Convert hex color to RGB if needed
   local function hex_to_rgb(hex)
+    if hex == 'none' or hex == 'transparent' then
+      return nil
+    end
     hex = hex:gsub('#', '')
     if #hex == 6 then
       local r = tonumber(hex:sub(1, 2), 16) / 255
@@ -136,23 +159,40 @@ local function latex_highlight(content)
   end
 
   local rgb = hex_to_rgb(bg_color)
-  local latex_begin = string.format('\\colorbox[rgb]{%s}{', rgb)
+  local text_rgb = config.text_color and hex_to_rgb(config.text_color)
 
-  if config.text_color then
-    local text_rgb = hex_to_rgb(config.text_color)
-    latex_begin = string.format('\\colorbox[rgb]{%s}{\\textcolor[rgb]{%s}{', rgb, text_rgb)
-    return {
-      pandoc.RawInline('latex', latex_begin)
-    }, content, {
-      pandoc.RawInline('latex', '}}')
-    }
-  else
+  -- Only text color, no background
+  if not rgb and text_rgb then
+    local latex_begin = string.format('\\textcolor[rgb]{%s}{', text_rgb)
     return {
       pandoc.RawInline('latex', latex_begin)
     }, content, {
       pandoc.RawInline('latex', '}')
     }
   end
+
+  -- Only background, no text color
+  if rgb and not text_rgb then
+    local latex_begin = string.format('\\colorbox[rgb]{%s}{', rgb)
+    return {
+      pandoc.RawInline('latex', latex_begin)
+    }, content, {
+      pandoc.RawInline('latex', '}')
+    }
+  end
+
+  -- Both background and text color
+  if rgb and text_rgb then
+    local latex_begin = string.format('\\colorbox[rgb]{%s}{\\textcolor[rgb]{%s}{', rgb, text_rgb)
+    return {
+      pandoc.RawInline('latex', latex_begin)
+    }, content, {
+      pandoc.RawInline('latex', '}}')
+    }
+  end
+
+  -- No styling
+  return {}, content, {}
 end
 
 -- Process Span elements with class "mark"

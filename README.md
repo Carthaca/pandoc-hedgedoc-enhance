@@ -144,11 +144,21 @@ The proposal was drafted by [name=Bob].
 
 ### Format-Specific Requirements
 
-**For HTML output:**
+**For HTML output (default):**
 - Include Font Awesome in your document head:
   ```html
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  ```
+
+**For HTML output (email-friendly):**
+- Set `name-label-emoji: true` in metadata to use emoji instead of Font Awesome
+- No external dependencies required
+- Recommended for HTML emails where external CSS won't work
+  ```yaml
+  ---
+  name-label-emoji: true
+  ---
   ```
 
 **For LaTeX output:**
@@ -167,9 +177,10 @@ The proposal was drafted by [name=Bob].
 
 ### Name Labels (`[name=...]`)
 
-- **HTML**: Formats with Font Awesome icon and small text
-- **LaTeX**: Uses fontawesome5 package with `\faUser` icon
-- Other formats: Uses Unicode emoji (👤)
+- **HTML (default)**: Font Awesome icon + small text (requires Font Awesome CSS)
+- **HTML (emoji mode)**: Unicode emoji 👤 + small text (set `name-label-emoji: true`)
+- **LaTeX**: fontawesome5 `\faUser` icon + small text
+- **Other formats**: Unicode emoji 👤 + name
 
 ## Requirements
 

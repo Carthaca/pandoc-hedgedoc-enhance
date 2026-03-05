@@ -90,7 +90,8 @@ end
 local config = {
   color = '#ffff00',           -- Default yellow
   background_color = nil,      -- Use foreground color as background by default
-  text_color = nil,           -- Text color (optional)
+  text_color = nil,            -- Text color (optional)
+  use_emoji = false,           -- Use emoji instead of Font Awesome for HTML
 }
 
 -- Read configuration from metadata
@@ -103,6 +104,10 @@ local function read_config(meta)
   end
   if meta['highlight-text-color'] then
     config.text_color = resolve_color(stringify(meta['highlight-text-color']))
+  end
+  if meta['name-label-emoji'] then
+    local value = stringify(meta['name-label-emoji']):lower()
+    config.use_emoji = (value == 'true' or value == 'yes' or value == '1')
   end
 end
 
@@ -261,8 +266,15 @@ end
 -- Returns: Pandoc inline element for the name label
 local function format_name_label(name)
   if FORMAT:match 'html' then
-    local html = string.format('<small><i class="fa fa-user"></i> %s</small>', escape_html(name))
-    return pandoc.RawInline('html', html)
+    if config.use_emoji then
+      -- Use emoji for email-compatible HTML
+      local html = string.format('<small>👤 %s</small>', escape_html(name))
+      return pandoc.RawInline('html', html)
+    else
+      -- Use Font Awesome (requires external CSS)
+      local html = string.format('<small><i class="fa fa-user"></i> %s</small>', escape_html(name))
+      return pandoc.RawInline('html', html)
+    end
   elseif FORMAT:match 'latex' then
     local latex = string.format('{\\small \\faUser\\ %s}', escape_latex(name))
     return pandoc.RawInline('latex', latex)
